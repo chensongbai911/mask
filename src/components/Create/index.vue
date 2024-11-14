@@ -21,7 +21,7 @@ import { defineModel} from 'vue'
   message?: string
 }>(), {
   title: '创建全新归类',
-  message: '确定要创建全新归类吗'
+  message: '确定要创建组间大类吗'
 });
 const visible = defineModel("show" , {
   type: Boolean,

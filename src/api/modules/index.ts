@@ -50,3 +50,32 @@ export function editProjectName(data:any): Promise<any> {
     data
   });
 }
+
+
+// 创建商品分组
+export function createGroup(data:any): Promise<any> {
+  return http({
+    url: `/api/group`,
+    method: 'post',
+    data
+  });
+}
+
+// 设置商品分组 
+export function createGoodsGroup(data:any): Promise<any> {
+  return http({
+    url: `/api/goods/group`,
+    method: 'post',
+    data
+  });
+}
+
+
+// 获取商品分组的信息 
+export function getGoodsGroupList(params:any): Promise<any> {
+  return http({
+    url: `/api/goods/list`,
+    method: 'get',
+    params
+  });
+}

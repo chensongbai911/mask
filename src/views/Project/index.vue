@@ -52,8 +52,8 @@
                   @click="goDetail(ele)"
                   :key="ele">
                   <section class="relative card-wrap">
-                    <section class="absolute top-[10px] right-[10px] w-[16px] cursor-pointer delete-icon"
-                      @click.prevent="deleteProjectHandler(ele)">
+                    <section class="absolute top-[0px] right-[0px] w-[16px] cursor-pointer delete-icon"
+                      @click.stop="deleteProjectHandler(ele)">
                       <svg aria-hidden="true"
                         class="icon">
                         <use xlink:href="#gt-line-delete"></use>
