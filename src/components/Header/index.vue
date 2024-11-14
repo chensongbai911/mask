@@ -50,7 +50,7 @@ onMounted(() => {
 .g-header {
   background-color: #232F3E !important;
   position: fixed;
-  min-height: 56px;
+  min-height: 60px;
   z-index: 99999;
   width: 100%;
 
@@ -68,7 +68,7 @@ onMounted(() => {
   &-left {
     display: flex;
     align-items: center;
-    height: 56px;
+    height: 60px;
   }
 
   &-right {}
@@ -76,7 +76,7 @@ onMounted(() => {
   &-logo {
     display: inline-block;
     width: 200px;
-    height: 56px;
+    height: 60px;
     background: url('@/assets/img/home/logo.png') no-repeat;
     background-size: contain;
     vertical-align: middle;
@@ -89,13 +89,13 @@ onMounted(() => {
 }
 
 .g-menu {
-  min-height: 56px;
+  min-height: 60px;
 
   .g-header-menu {
     padding-top: 16px;
     padding-bottom: 16px;
     position: fixed;
-    top: calc(56px + 1px);
+    top: calc(60px + 1px);
     left: 0;
     width: 100%;
     z-index: 6;

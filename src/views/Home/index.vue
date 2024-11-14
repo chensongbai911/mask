@@ -4,11 +4,17 @@
     <main>
       <div class="box-wrap">
         <!-- 父类的池子 -->
-        <section class="pb-[20px]">
-
-          <p class="project-name">项目名称：特朗普</p>
-          <p class="time">最后一次修改时间：2024.11.8 12:00</p>
-          <p class="time">创建于2024.11.8</p>
+        <section class="pb-[20px] relative">
+          <p class="project-name">项目名称：{{  }}</p>
+          <p class="time">最后一次修改时间：{{ parentProName }}</p>
+          <p class="time">创建于{{ productDetail.createTime }}</p>
+          <section class="absolute top-[6px] right-0 w-[16px] cursor-pointer"
+            @click="changeProjectName">
+            <svg aria-hidden="true"
+              class="icon">
+              <use xlink:href="#gt-line-edit"></use>
+            </svg>
+          </section>
         </section>
 
         <!-- 排序、收藏、统计 -->
@@ -30,10 +36,10 @@
             gridColumnGap: `5px`,
           }">
           <div v-for="item in parentList"
-            :key="item.brand"
+            :key="item.goodsId"
             class="child-wrap mover">
             <el-image style="width: 100%; height:100%"
-              :src="item.brandUrl"
+              :src="item.goodsImage"
               fit="cover" />
           </div>
         </div>
@@ -88,6 +94,17 @@
       </template>
     </Create>
 
+    <!-- 更改项目名字 -->
+    <Create v-model:show="editShow"
+      @closeDialog="closeEditModal"
+      @confirmData="confirmNameData"
+      title="更改项目名字">
+      <template #message>
+        <el-input v-model="editParentProName"
+          placeholder="请输入项目名字" />
+      </template>
+    </Create>
+
     <Create title="子类标题"
       v-model:show="classShow"
       @closeDialog=" show = false"
@@ -121,20 +138,21 @@
 </template>
 
 <script setup>
-import { computed, ref, watchEffect,onMounted } from 'vue'
+import { computed, ref, watchEffect, onMounted } from 'vue'
+import { useProductStore } from '@/stores/produce'
+import { storeToRefs } from 'pinia'
 import Header from '@/components/Header/index.vue'
 import { useDraggable } from 'vue-draggable-plus'
 import Create from '@/components/Create/index.vue'
-import { List } from './data'
 import { ElMessage } from 'element-plus'
-import Child from './components/Child.vue'
-import { useRouter } from 'vue-router'
+import Child from '@/components/Create/index.vue'
+import { useRouter, useRoute } from 'vue-router'
 import { md5 } from 'js-md5';
 import sort from '@/assets/img/home/sort.png'
 import star from '@/assets/img/home/star.png'
 import total from '@/assets/img/home/total.png'
 import add from '@/assets/img/home/add.png'
-import { getProject } from '@/api/modules/index'
+import { getProductList, editProjectName } from '@/api/modules/index'
 
 const sortList = ref([
   {
@@ -151,7 +169,8 @@ const sortList = ref([
   }
 ])
 
-const parentList = ref(List)
+const parentList = ref([]) // 最大的池子
+
 const createShow = ref(false)
 const show = ref(false)
 const classTitle = ref('') //子类标题
@@ -160,28 +179,68 @@ const router = useRouter()
 const classShow = ref(false)
 const createClassShow = ref(false)
 const createClassObj = ref({}) // 创建的当前子类信息
-
+const { productDetail } = storeToRefs(useProductStore())
 const parentNodeRef = ref(null) // 父类的池子
+const editShow = ref(false)
+const route = useRoute()
+const parentProName = ref(productDetail.value.projectName) //父级池子的名字
+const editParentProName = ref('')
+
 
 
 // 获取商品列表
-async function getProjectList() {
+async function getProduct() {
   try {
     const params = {
-      projectId: '1856535649746681856'
+      projectId: route.params.id
     }
-    const { data } = await getProject(params)
-    console.log(data)
+    const { data } = await getProductList(params)
+    if (Array.isArray(data?.data)) {
+      parentList.value = data.data
+    } else {
+      parentList.value = []
+    }
   }
   catch (error) {
-  console.log(error)
-}
+    console.log(error)
+  }
 }
 
+// 关闭更改项目名字的弹框
+const closeEditModal = ()=>{
+  editShow.value = false
+  editParentProName.value = ''
+}
 
-onMounted(()=>{
-  getProjectList()
-})
+// 更改用户名
+const changeProjectName = () => {
+  editShow.value = true
+  editParentProName.value = productDetail.value.projectName
+}
+
+// 确定更改用户名
+const confirmNameData = async () => {
+  try {
+    const { data } = await editProjectName({ projectId: route.params.id, projectName: parentProName.value })
+    if (data.code === 200) {
+      closeEditModal()
+      ElMessage({
+        showClose: true,
+        message: '操作成功',
+        type: 'success',
+      })
+      parentProName.value = editParentProName.value
+    } else {
+      ElMessage({
+        showClose: true,
+        message: '操作失败',
+        type: 'error',
+      })
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 // 价格统计
 const totalPrice = computed(() => {
@@ -346,6 +405,11 @@ const confirmClassData = () => {
   closeClassDialogShow()
 }
 
+
+onMounted(() => {
+  getProduct()
+  console.log(route.params.id)
+})
 </script>
 
 <style lang="scss">
@@ -374,7 +438,7 @@ main {
 .project-name {
   font-size: 16px;
   color: #333333;
-  padding-bottom: 30px;
+  padding-bottom: 10px;
   font-weight: 900;
 }
 

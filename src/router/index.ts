@@ -8,7 +8,7 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'Project', component: Project },
     { path: '/login', name: 'Login', component: Login },
-    { path: '/list', name: 'Home', component: Home },
+    { path: '/list/:id', name: 'Home', component: Home },
   ],
 })
 

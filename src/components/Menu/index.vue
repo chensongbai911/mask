@@ -6,7 +6,7 @@
       <el-image style="width: 18px; height: 18px"
         :src="item.url"
         fit="cover"></el-image>
-      <span :style="{ color: route.name === item.path ? 'red' : '#000' }">{{ item.name }}</span>
+      <span :style="{ color: route.name === item.path ? 'red' : '#fff' }">{{ item.name }}</span>
     </section>
 
   </section>
