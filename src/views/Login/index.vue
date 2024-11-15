@@ -33,13 +33,14 @@ import { LottieAnimation } from "lottie-web-vue"
 import LoginForm from "./components/LoginForm.vue";
 import { json } from './lottie'
 
-const anim = ref(null)
+const anim = ref<any>(null)
 const WatermelonJSON = ref(json)
 
 onMounted(() => {
   setTimeout(() => {
-    console.log(anim.value.goToAndPlay(150, true))
-    anim.value
+    if (anim.value) {
+      anim.value.goToAndPlay(150, true)
+    }
   }, 500)
 })
 

@@ -194,7 +194,7 @@ const confirmModal = () => {
 const deleteProjectHandler = async (ele: any) => {
   try {
     ElMessageBox.alert(`确定要删除项目${ele.projectName}吗？`,'删除',  {
-      confirmButtonText: 'OK',
+      confirmButtonText: '确 定',
       callback: async(action: Action) => {
         if (action === 'confirm') {
           const { data } = await deleteProject({ projectId: ele.projectId })

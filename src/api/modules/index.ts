@@ -79,3 +79,12 @@ export function getGoodsGroupList(params:any): Promise<any> {
     params
   });
 }
+
+// 删除项目 
+export function deleteGroup(params:any): Promise<any> {
+  return http({
+    url: `/api/group`,
+    method: 'delete',
+    params
+  });
+}

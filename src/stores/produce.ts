@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useProductStore = defineStore('Product', () => {
-  const productDetail = ref({})
+  const productDetail = ref<Record<string,any>>({})
   function setProductDetail(data: any) {
     productDetail.value = data
   }

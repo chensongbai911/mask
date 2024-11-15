@@ -67,14 +67,17 @@
               <span class="text-[#FF9900] font-bold">{{ item.statisticalIndicatorInfo[ele.label] || 0 }}</span>
             </section>
           </section>
-          <h5>组间标题：{{ item.groupName }}</h5>
-          <!-- <section class="absolute top-[6px] right-0 w-[16px] cursor-pointer"
-            @click="changeChildProjectName(item)">
-            <svg aria-hidden="true"
-              class="icon">
-              <use xlink:href="#gt-line-edit" />
-            </svg>
-          </section> -->
+          <h5>组间标题：{{ item.groupName }}
+
+            <section class="absolute top-[20px] right-[20px] w-[16px] cursor-pointer delete-icon"
+              @click.stop="deleteGroupHandler(item)">
+              <svg aria-hidden="true"
+                class="icon">
+                <use xlink:href="#gt-line-delete"></use>
+              </svg>
+            </section>
+          </h5>
+
           <Child :key="item.groupId"
             v-model="item.goodsList"
             :groupId="item.groupId"
@@ -181,11 +184,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang='ts'>
 import { computed, onMounted, ref, watchEffect } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import { useDraggable } from 'vue-draggable-plus'
-import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import Child from './components/Child.vue'
 import Create from '@/components/Create/index.vue'
@@ -195,12 +198,14 @@ import sort from '@/assets/img/home/sort.png'
 import star from '@/assets/img/home/star.png'
 import total from '@/assets/img/home/total.png'
 import add from '@/assets/img/home/add.png'
+
 import {
   createGoodsGroup,
   createGroup,
   editProjectName,
   getGoodsGroupList,
   getProductList,
+  deleteGroup
 } from '@/api/modules/index'
 
 // 大组的数据面板
@@ -236,24 +241,24 @@ const sortList = ref([
   },
 ])
 
-const parentList = ref([]) // 最大的池子
+const parentList = ref<Array<Record<string, any>>>([]) // 最大的池子
 
 const createShow = ref(false)
 const show = ref(false)
 const editChildShow = ref(false)
-const classTitle = ref('') // 子类标题
-const childrenList = ref([]) // 子类集合
+const classTitle = ref<string>('') // 子类标题
+const childrenList = ref<Array<Record<string, any>>>([]) // 子类集合
 const router = useRouter()
 const classShow = ref(false)
 const createClassShow = ref(false)
-const createClassObj = ref({}) // 创建的当前子类信息
+const createClassObj = ref<Record<string, any>>({}) // 创建的当前子类信息
 const { productDetail } = storeToRefs(useProductStore())
 const parentNodeRef = ref(null) // 父类的池子
 const editShow = ref(false)
 const route = useRoute()
 const parentProName = ref(productDetail.value.projectName) // 父级池子的名字
 const editParentProName = ref('')
-const editChildInfo = ref({})
+const editChildInfo = ref<Record<string, any>>({})
 
 // 获取商品列表
 async function getProduct() {
@@ -296,7 +301,7 @@ async function getGoodsGroupListHandler() {
 }
 
 // 创建分组和编辑子类名字
-async function createProductGroup(parentId) {
+async function createProductGroup(parentId?: string) {
   try {
     const { data } = await createGroup({
       projectId: route.params.id,
@@ -326,13 +331,39 @@ async function confirmData() {
   }
   if (classTitle.value) {
     const data = await createProductGroup()
-    childrenList.value.push(data)
+    childrenList.value.push(data as any)
     closeDialogShow()
   }
 }
 
+// 删除商品分组
+const deleteGroupHandler = async (ele: any) => {
+  try {
+    ElMessageBox.alert(`确定要删除分组${ele.groupName}吗？`, '删除', {
+      confirmButtonText: '确 定',
+      callback: async (action: any) => {
+        if (action === 'confirm') {
+          const { data } = await deleteGroup({ groupId: ele.groupId })
+          if (data.code === 200) {
+            ElMessage({
+              showClose: true,
+              message: '操作成功',
+              type: 'success',
+            })
+            await getProduct()
+            await getGoodsGroupListHandler()
+          }
+        }
+      },
+    })
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 // 创建商品分组 createGoodsGroupHandler
-async function createGoodsGroupHandler(groupId, goodsId) {
+async function createGoodsGroupHandler(groupId: string, goodsId: string) {
   try {
     const { data } = await createGoodsGroup({
       groupId,
@@ -359,7 +390,7 @@ function closeEditModal() {
 }
 
 //更改子项目的名字的弹框 
-function changeChildProjectName(projectName) {
+function changeChildProjectName(projectName:Record<string,any>) {
   editShow.value = true
   editParentProName.value = projectName.groupName
   editChildInfo.value = projectName
@@ -418,7 +449,7 @@ async function confirmChildNameData() {
 }
 // 所有的名字集合
 const nameList = computed(() => {
-  return childrenList.value.reduce((cur, next) => {
+  return childrenList.value.reduce((cur: Array<any>, next: Record<string, any>) => {
     cur.push(next.groupName)
     if (Array.isArray(next.childrenList) && next.childrenList.length) {
       cur.push(...next.childrenList.map(res => res.groupName))
@@ -428,7 +459,7 @@ const nameList = computed(() => {
 })
 
 // 更新子类的信息
-function updateList({ data, groupId }) {
+function updateList({ data = { data: { goodsId: '' } }, groupId = '' }) {
   const { goodsId = '' } = data.data
   createGoodsGroupHandler(groupId, goodsId)
 }
@@ -454,7 +485,7 @@ watchEffect(async () => {
 })
 
 // 创建当前子类
-function createClassHandler(res) {
+function createClassHandler(res: any) {
   createClassObj.value = res
   classShow.value = true
 }
@@ -585,6 +616,7 @@ main {
       color: #000;
       padding-left: 20px;
       padding-top: 20px;
+      position: relative;
     }
   }
 
