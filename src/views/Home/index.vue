@@ -4,24 +4,20 @@
     <main>
       <div class="box-wrap">
         <!-- 父类的池子 -->
-        <section class="pb-[20px] relative">
+        <section class="p-[20px] relative">
           <p class="project-name">
-            项目名称：{{}}
+            项目名称：{{ parentProName }}
           </p>
           <p class="time">
-            最后一次修改时间：{{ parentProName }}
+            最后一次修改时间：{{ productDetail.updateTime }}
           </p>
           <p class="time">
             创建于{{ productDetail.createTime }}
           </p>
-          <section
-            class="absolute top-[6px] right-0 w-[16px] cursor-pointer"
-            @click="changeProjectName"
-          >
-            <svg
-              aria-hidden="true"
-              class="icon"
-            >
+          <section class="absolute top-[20px] right-[20px] w-[16px] cursor-pointer"
+            @click="changeProjectName">
+            <svg aria-hidden="true"
+              class="icon">
               <use xlink:href="#gt-line-edit" />
             </svg>
           </section>
@@ -29,160 +25,155 @@
 
         <!-- 排序、收藏、统计 -->
         <section class="sort-wrap">
-          <section
-            v-for="item in sortList"
-            class="sort-child"
-          >
+          <section v-for="item in sortList"
+            class="sort-child">
             <span> {{ item.name }}</span>
-            <el-image
-              style="width: 15px; height: 15px"
+            <el-image style="width: 15px; height: 15px"
               :src="item.url"
-              fit="cover"
-            />
+              fit="cover" />
           </section>
         </section>
         <!-- 父级池子的商品列表 -->
-        <div
-          ref="parentNodeRef"
+        <div ref="parentNodeRef"
           class="darg-wrap"
           :style="{
             gridTemplateColumns: `repeat(3, minmax(50px,1fr))`,
             gridRowGap: `5px`,
             gridColumnGap: `5px`,
-          }"
-        >
-          <div
-            v-for="item in parentList"
+          }">
+          <div v-for="item in parentList"
             :key="item.goodsId"
-            class="child-wrap mover"
-          >
-            <el-image
-              style="width: 100%; height: 100%"
+            class="child-wrap mover">
+            <el-image style="width: 100%; height: 100%"
               :src="item.goodsImage"
-              fit="cover"
-            />
+              fit="cover" />
           </div>
         </div>
       </div>
 
       <template v-if="childrenList.length">
+      
         <!-- 子类的池子 -->
-        <div
-          v-for="item in childrenList"
-          :key="item.id" class="box-wrap"
-        >
+        <div v-for="item in childrenList"
+          :key="item.id"
+          class="box-wrap">
+            <!-- 最大组内面板数据 -->
+          <section class="panel-wrap flex justify-center" v-if="item.statisticalIndicatorInfo">
+            <section v-for="ele in bigPanelData"
+              :key="ele.label" class="text-[12px] text-[#000] flex flex-col text-center">
+              <section>{{ ele.label }}</section>
+              <span class="text-[#FF9900] font-bold">{{ item.statisticalIndicatorInfo[ele.label] || 0}}</span>
+            </section>
+          </section>
           <h5>组间标题：{{ item.groupName }}</h5>
-          <el-button
-            type="primary"
-            class="my-[10px]"
-            @click="createClassHandler(item)"
-          >
-            创建组内
-          </el-button>
-          <Child
-            :key="item.id"
-            :data="item.goodsList"
-            @update="updateList"
-          />
-          <div
-            v-if="Array.isArray(item.childrenList) && item.childrenList.length"
-            class="children-list-wrap"
-          >
-            <div
-              v-for="item in item.childrenList"
-              :key="item.id"
-              class="box-wrap w-90"
-            >
+          <!-- <section class="absolute top-[6px] right-0 w-[16px] cursor-pointer"
+            @click="changeChildProjectName(item)">
+            <svg aria-hidden="true"
+              class="icon">
+              <use xlink:href="#gt-line-edit" />
+            </svg>
+          </section> -->
+          <Child :key="item.groupId"
+            v-model="item.goodsList"
+            :groupId="item.groupId"
+            @update="updateList" />
+          <div v-if="Array.isArray(item.childrenList) && item.childrenList.length"
+            class="children-list-wrap">
+            <div v-for="item in item.childrenList"
+              :key="item.groupId"
+              class="box-wrap w-90">
               <h5>当前子类标题：{{ item.groupName }}</h5>
-              <div class="panel-wrap">
-                <!-- <div class="text-[#000]">
-                  总价： {{ hanlderTotalPrice(item.list).toFixed(2) }}
-                </div> -->
+              <div class="panel-wrap"
+                v-if="item.statisticalIndicatorInfo">
+                <div class="text-[#000] flex flex-col text-center"
+                  v-for="ele in Object.keys(item.statisticalIndicatorInfo)">
+                  <div>{{ ele }}</div>
+                  <div class="text-[#FF9900] font-bold">{{ item.statisticalIndicatorInfo[ele] }}</div>
+                </div>
               </div>
-              <Child
-                :key="item.id"
-                :data="item.goodsList"
-                @update="updateList"
-              />
+              <Child :key="item.groupId"
+                :groupId="item.groupId"
+                v-model="item.goodsList"
+                @update="updateList" />
             </div>
           </div>
+          <!-- 创建组间的分类 -->
+          <section class="my-[20px] create-btn-wrap w-[90%] bg-[#e1e1e1] m-auto"
+            @click="createClassHandler(item)">
+            <el-image style="width: 22px; height: 22px"
+              :src="add"
+              fit="cover" />
+            <span class="px-[10px] cursor-pointer">创建组内</span>
+          </section>
         </div>
       </template>
       <!-- 创建组间的分类 -->
-      <section
-        class="my-[20px] create-btn-wrap"
-        @click="addChildClass"
-      >
-        <el-image
-          style="width: 22px; height: 22px"
+      <section class="my-[20px] create-btn-wrap"
+        @click="addChildClass">
+        <el-image style="width: 22px; height: 22px"
           :src="add"
-          fit="cover"
-        />
+          fit="cover" />
         <span class="px-[10px] cursor-pointer">创建组间</span>
       </section>
     </main>
 
-    <Create
-      v-model:show="show"
+    <Create v-model:show="show"
+      title="创建组间"
       @close-dialog="show = false"
-      @confirm-data="createConfirmData"
-    >
+      @confirm-data="createConfirmData">
       <template #message>
         <span>确定要创建组间大类吗？</span>
       </template>
     </Create>
 
     <!-- 更改项目名字 -->
-    <Create
-      v-model:show="editShow"
-      title="更改项目名字"
+    <Create v-model:show="editShow"
+      title="更改项目名称"
       @close-dialog="closeEditModal"
-      @confirm-data="confirmNameData"
-    >
+      @confirm-data="confirmNameData">
       <template #message>
-        <el-input
-          v-model="editParentProName"
-          placeholder="请输入项目名字"
-        />
+        <el-input v-model="editParentProName"
+          placeholder="请输入项目名称" />
       </template>
     </Create>
 
-    <Create
-      v-model:show="classShow"
-      title="组间标题"
-      @close-dialog="show = false"
-      @confirm-data="createClassConfirmData"
-    >
+    <!-- 更改分组项目的名字 -->
+    <Create v-model:show="editChildShow"
+      title="编辑名称"
+      @close-dialog="closeEditModal"
+      @confirm-data="confirmChildNameData">
       <template #message>
-        <span>确定要创建组间吗？</span>
+        <el-input v-model="editParentProName"
+          placeholder="请输入名称" />
       </template>
     </Create>
 
-    <Create
-      v-model:show="createShow"
-      title="添加组内标题"
+    <Create v-model:show="classShow"
+      title="创建组内"
+      @close-dialog="classShow = false"
+      @confirm-data="createClassConfirmData">
+      <template #message>
+        <span>确定要创建组内吗？</span>
+      </template>
+    </Create>
+
+    <Create v-model:show="createShow"
+      title="添加组间标题"
       @close-dialog="closeDialogShow"
-      @confirm-data="confirmData"
-    >
+      @confirm-data="confirmData">
       <template #message>
-        <el-input
-          v-model="classTitle"
-          placeholder="请输入组内标题"
-        />
+        <el-input v-model="classTitle"
+          placeholder="请输入组间标题" />
       </template>
     </Create>
 
-    <Create
-      v-model:show="createClassShow"
+    <Create v-model:show="createClassShow"
       title="组内标题"
       @close-dialog="closeClassDialogShow"
-      @confirm-data="confirmClassData"
-    >
+      @confirm-data="confirmClassData">
       <template #message>
-        <el-input
-          v-model="classTitle"
-          placeholder="请输入组间标题"
-        />
+        <el-input v-model="classTitle"
+          placeholder="请输入组内标题" />
       </template>
     </Create>
   </div>
@@ -194,7 +185,6 @@ import { storeToRefs } from 'pinia'
 import { useDraggable } from 'vue-draggable-plus'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { md5 } from 'js-md5'
 import Child from './components/Child.vue'
 import Create from '@/components/Create/index.vue'
 import Header from '@/components/Header/index.vue'
@@ -210,7 +200,24 @@ import {
   getGoodsGroupList,
   getProductList,
 } from '@/api/modules/index'
-import {List} from './data'
+
+// 大组的数据面板
+const bigPanelData = ref([{
+  label: '总ASIN',
+  value: '',
+}, {
+  label: '销售额',
+  value: '',
+}, {
+  label: '平均价格',
+  value: '',
+}, {
+  label: '品牌数',
+  value: '',
+}, {
+  label: '前三销售额',
+  value: '',
+}])
 
 const sortList = ref([
   {
@@ -231,6 +238,7 @@ const parentList = ref([]) // 最大的池子
 
 const createShow = ref(false)
 const show = ref(false)
+const editChildShow = ref(false)
 const classTitle = ref('') // 子类标题
 const childrenList = ref([]) // 子类集合
 const router = useRouter()
@@ -243,6 +251,7 @@ const editShow = ref(false)
 const route = useRoute()
 const parentProName = ref(productDetail.value.projectName) // 父级池子的名字
 const editParentProName = ref('')
+const editChildInfo = ref({})
 
 // 获取商品列表
 async function getProduct() {
@@ -260,7 +269,7 @@ async function getProduct() {
   }
   catch (error) {
     console.log(error)
-  }finally{
+  } finally {
     console.log(parentList.value)
   }
 }
@@ -284,20 +293,17 @@ async function getGoodsGroupListHandler() {
   }
 }
 
-// 创建分组
-async function createProductGroup() {
+// 创建分组和编辑子类名字
+async function createProductGroup(parentId) {
   try {
     const { data } = await createGroup({
       projectId: route.params.id,
       groupName: classTitle.value,
+      parentId
     })
     if (data.code === 200) {
-      childrenList.value.push({
-        ...data.data,
-        id: guid(),
-        ref: md5(classTitle.value),
-      })
       ElMessage.success('创建成功')
+      return data.data
     }
   }
   catch (error) {
@@ -306,7 +312,7 @@ async function createProductGroup() {
 }
 
 // 添加大类标题
-function confirmData() {
+async function confirmData() {
   if (!classTitle.value) {
     ElMessage.error('名字不能为空')
     return
@@ -317,16 +323,17 @@ function confirmData() {
     return
   }
   if (classTitle.value) {
-    createProductGroup()
+    const data = await createProductGroup()
+    childrenList.value.push(data)
     closeDialogShow()
   }
 }
 
 // 创建商品分组 createGoodsGroupHandler
-async function createGoodsGroupHandler(goodsId) {
+async function createGoodsGroupHandler(groupId, goodsId) {
   try {
     const { data } = await createGoodsGroup({
-      groupId: route.params.id,
+      groupId,
       goodsId,
     })
     if (data.code === 200) {
@@ -345,12 +352,19 @@ async function createGoodsGroupHandler(goodsId) {
 // 关闭更改项目名字的弹框
 function closeEditModal() {
   editShow.value = false
+  editChildShow.value = false
   editParentProName.value = ''
 }
 
+//更改子项目的名字的弹框 
+function changeChildProjectName(projectName) {
+  editShow.value = true
+  editParentProName.value = projectName.groupName
+  editChildInfo.value = projectName
+}
 // 更改用户名
 function changeProjectName() {
-  editShow.value = true
+  editChildShow.value = true
   editParentProName.value = productDetail.value.projectName
 }
 
@@ -383,24 +397,41 @@ async function confirmNameData() {
   }
 }
 
+
+// 更改子类的用户名称 
+async function confirmChildNameData() {
+  try {
+    const { data } = await createGroup({
+      groupId: editChildInfo.value.groupId,
+      groupName: editParentProName.value,
+    })
+    if (data.code === 200) {
+      editChildInfo.value.groupName = editParentProName.value
+      ElMessage.success('修改成功')
+    }
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
 // 所有的名字集合
 const nameList = computed(() => {
   return childrenList.value.reduce((cur, next) => {
-    cur.push(next.classTitle)
-    if (Array.isArray(next.children) && next.children.length) {
-      cur.push(...next.children.map(res => res.classTitle))
+    cur.push(next.groupName)
+    if (Array.isArray(next.childrenList) && next.childrenList.length) {
+      cur.push(...next.childrenList.map(res => res.groupName))
     }
     return cur
   }, [])
 })
 
 // 更新子类的信息
-function updateList(list) {
-  const { goodsId = '' } = list.data
-  createGoodsGroupHandler(goodsId)
+function updateList({ data, groupId }) {
+  const { goodsId = '' } = data.data
+  createGoodsGroupHandler(groupId, goodsId)
 }
 
-watchEffect(async() => {
+watchEffect(async () => {
   await getProduct()
   if (parentNodeRef.value) {
     useDraggable(parentNodeRef.value, parentList.value, {
@@ -419,15 +450,6 @@ watchEffect(async() => {
     })
   }
 })
-
-// 生成UUID
-function guid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0
-    const v = c == 'x' ? r : (r & 0x3) | 0x8
-    return v.toString(16)
-  })
-}
 
 // 创建当前子类
 function createClassHandler(res) {
@@ -463,7 +485,7 @@ function createClassConfirmData() {
 }
 
 // 添加子类信息
-function confirmClassData() {
+async function confirmClassData() {
   if (!classTitle.value) {
     ElMessage.error('名字不能为空')
     return
@@ -473,27 +495,19 @@ function confirmClassData() {
     return
   }
   const result = childrenList.value.find((ele) => {
-    return ele.id === createClassObj.value.id
+    return ele.groupId === createClassObj.value.groupId
   })
-
+  const data = await createProductGroup(createClassObj.value.groupId)
   childrenList.value = childrenList.value.map((res) => {
-    if (res.id === result.id) {
-      if (Array.isArray(res.children)) {
-        res.children.push({
-          classTitle: classTitle.value,
-          list: [],
-          id: guid(),
-          ref: md5(classTitle.value),
-        })
-      }
-      else {
-        res.children = []
-        res.children.push({
-          classTitle: classTitle.value,
-          list: [],
-          id: guid(),
-          ref: md5(classTitle.value),
-        })
+    if (res.groupId === result.groupId) {
+      if (Array.isArray(res.childrenList)) {
+        if (Array.isArray(data.goodsList)) {
+          res.childrenList.push(data)
+        } else {
+          data.goodsList = []
+          res.childrenList.push(data)
+        }
+
       }
     }
     return res
@@ -503,7 +517,6 @@ function confirmClassData() {
 }
 
 onMounted(() => {
-  getProduct()
   getGoodsGroupListHandler()
 })
 </script>
@@ -554,19 +567,22 @@ main {
   overflow-y: hidden;
 
   .box-wrap {
-    margin: 20px;
-    padding: 20px;
-    width: 330px;
+    margin-top: 20px;
+    margin-right: 20px;
+    width: 440px;
     border-radius: 4px;
     border: 2px solid #ffffff;
     max-height: 90vh;
     overflow-y: scroll;
     background: #ffffff;
+    position: relative;
 
     h5 {
       font-size: 16px;
       font-weight: 900;
       color: #000;
+      padding-left: 20px;
+      padding-top: 20px;
     }
   }
 
@@ -614,6 +630,7 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 20px;
 
   .sort-child {
     display: flex;
@@ -641,5 +658,14 @@ main {
       color: red;
     }
   }
+}
+
+.panel-wrap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 20px;
+  row-gap: 10px;
+  margin-top: 20px;
+  font-size: 12px;
 }
 </style>
