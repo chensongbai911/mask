@@ -5,7 +5,7 @@
       <div class="box-wrap">
         <!-- 父类的池子 -->
         <section class="p-[20px] relative">
-          <p class="project-name">
+          <p class="project-name max-w-[90%] whitespace-nowrap text-ellipsis overflow-hidden ...">
             项目名称：{{ parentProName }}
           </p>
           <p class="time">
@@ -52,17 +52,19 @@
       </div>
 
       <template v-if="childrenList.length">
-      
+
         <!-- 子类的池子 -->
         <div v-for="item in childrenList"
           :key="item.id"
           class="box-wrap">
-            <!-- 最大组内面板数据 -->
-          <section class="panel-wrap flex justify-center" v-if="item.statisticalIndicatorInfo">
+          <!-- 最大组内面板数据 -->
+          <section class="panel-wrap flex justify-center"
+            v-if="item.statisticalIndicatorInfo">
             <section v-for="ele in bigPanelData"
-              :key="ele.label" class="text-[12px] text-[#000] flex flex-col text-center">
+              :key="ele.label"
+              class="text-[12px] text-[#000] flex flex-col text-center">
               <section>{{ ele.label }}</section>
-              <span class="text-[#FF9900] font-bold">{{ item.statisticalIndicatorInfo[ele.label] || 0}}</span>
+              <span class="text-[#FF9900] font-bold">{{ item.statisticalIndicatorInfo[ele.label] || 0 }}</span>
             </section>
           </section>
           <h5>组间标题：{{ item.groupName }}</h5>
