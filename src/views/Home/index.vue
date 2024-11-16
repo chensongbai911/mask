@@ -2,7 +2,7 @@
   <div class="conatiner">
     <Header />
     <main>
-      <div class="box-wrap">
+      <div class="box-wrap" style="position: sticky; left: 0px; z-index: 9999;">
         <!-- 父类的池子 -->
         <section class="p-[20px] sticky">
           <!-- 项目的基本信息、 -->
@@ -67,7 +67,7 @@
           :key="item.id"
           class="box-wrap"
           :style="{
-            width: item.show ? '740px' : '440px',
+            width: item.show ? '1040px' : '440px',
           }"
         >
           <!-- 最大组内面板数据 -->
@@ -122,7 +122,7 @@
           <Child
             :style="{
               'grid-template-columns': item.show
-                ? 'repeat(5, minmax(50px, 1fr))'
+                ? 'repeat(8, minmax(50px, 1fr))'
                 : 'repeat(3, minmax(50px, 1fr))',
             }"
             :key="item.groupId"
@@ -156,7 +156,7 @@
               <Child
                 :style="{
                   'grid-template-columns': item.show
-                    ? 'repeat(5, minmax(50px, 1fr))'
+                    ? 'repeat(8, minmax(50px, 1fr))'
                     : 'repeat(3, minmax(50px, 1fr))',
                 }"
                 :key="item.groupId"
