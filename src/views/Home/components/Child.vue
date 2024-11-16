@@ -1,39 +1,49 @@
 <template>
   {{ data }}
-  <div ref="childNodeRef"
+  <div
+    ref="childNodeRef"
     class="children-wrap"
     :style="{
       gridTemplateColumns: `repeat(3, minmax(50px,1fr))`,
       gridRowGap: `10px`,
       gridColumnGap: `10px`,
-    }">
-
-    <div v-for="item in model"
-      :key="item.goodsImage"
-      class="child-wrap mover">
-      <el-image style="width: 100%; height: 100%"
+      ...style,
+    }"
+  >
+    <div v-for="item in model" :key="item.goodsImage" class="child-wrap mover">
+      <el-image
+        style="width: 100%; height: 100%;"
         :src="item.goodsImage"
-        fit="cover" />
+        fit="cover"
+      />
     </div>
   </div>
 </template>
 
-<script lang='ts' setup>
+<script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 import { useDraggable } from 'vue-draggable-plus'
 
-const props = withDefaults(defineProps<{
-  groupId: string
-}>(), {
-  groupId: ''
-})
+const props = withDefaults(
+  defineProps<{
+    groupId: string
+    style: Record<string, any>
+  }>(),
+  {
+    groupId: '',
+    style: function () {
+      return {}
+    },
+  },
+)
 // 子类的池子
 const emits = defineEmits(['update'])
 const model = defineModel<Array<{ goodsImage: string }>>({
   default: function () {
     return []
-  }, required: true
-});
+  },
+  required: true,
+})
 const childNodeRef = ref(null)
 watchEffect(() => {
   if (childNodeRef.value) {
@@ -56,9 +66,9 @@ watchEffect(() => {
 })
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .children-wrap {
   display: grid;
-  min-height: 300px;
+  min-height: 150px;
 }
 </style>
