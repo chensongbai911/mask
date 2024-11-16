@@ -1,6 +1,6 @@
 <template>
   <section class="create-project-wrap">
-    <el-container style="height: 100%">
+    <el-container style="height: 100%;">
       <el-header style="padding: 0;">
         <Header />
       </el-header>
@@ -8,36 +8,30 @@
         <el-aside width="200px">
           <section class="aside-menu">
             <section class="child">
-              <svg aria-hidden="true"
-                class="icon">
+              <svg aria-hidden="true" class="icon">
                 <use xlink:href="#gt-plane-notebook-red"></use>
               </svg>
               我的项目
             </section>
             <section class="child">
-              <svg aria-hidden="true"
-                class="icon">
+              <svg aria-hidden="true" class="icon">
                 <use xlink:href="#gt-plane-goback"></use>
               </svg>
               回收站
             </section>
           </section>
-
         </el-aside>
         <el-main>
           <section class="flex flex-col">
             <!-- 创建项目 -->
-            <section class="create-btn"
-              @click="createProject">
+            <section class="create-btn" @click="createProject">
               <section class="flex items-center">
-                <svg aria-hidden="true"
-                  class="icon">
+                <svg aria-hidden="true" class="icon">
                   <use xlink:href="#gt-plane-project-opened-blue"></use>
                 </svg>
                 <span>创建项目</span>
               </section>
-              <svg aria-hidden="true"
-                class="icon">
+              <svg aria-hidden="true" class="icon">
                 <use xlink:href="#gt-line-add"></use>
               </svg>
             </section>
@@ -46,77 +40,88 @@
               <section class="title">
                 <h3 class="font-bold">项目列表</h3>
               </section>
-              <section class="card-list grid grid-flow-row grid-cols-3 gap-3 mt-3">
-                <el-card style="max-width: 480px"
+              <section
+                class="card-list grid grid-flow-row grid-cols-4 gap-4 mt-3 pr-[40px]"
+              >
+                <el-card
+                  class="card-container"
                   v-for="ele in projectList"
                   @click="goDetail(ele)"
-                  :key="ele">
+                  :key="ele"
+                >
                   <section class="relative card-wrap">
-                    <section class="absolute top-[0px] right-[0px] w-[16px] cursor-pointer delete-icon"
-                      @click.stop="deleteProjectHandler(ele)">
-                      <svg aria-hidden="true"
-                        class="icon">
+                    <section
+                      class="absolute top-[0px] right-[0px] w-[16px] cursor-pointer delete-icon"
+                      @click.stop="deleteProjectHandler(ele)"
+                    >
+                      <svg aria-hidden="true" class="icon">
                         <use xlink:href="#gt-line-delete"></use>
                       </svg>
                     </section>
-                    <p class="text item">{{ ele.projectName }}</p>
+                    <p class="text item font-bold text-[18px]">
+                      {{ ele.projectName }}
+                    </p>
                     <p class="text item">创建时间：{{ ele.createTime }}</p>
                     <p class="text item">更新时间：{{ ele.updateTime }}</p>
                   </section>
                 </el-card>
               </section>
             </section>
-
           </section>
         </el-main>
       </el-container>
     </el-container>
 
-    <Create title="创建项目"
+    <Create
+      title="创建项目"
       v-model:show="show"
       @closeDialog="closeModal"
-      @confirmData="confirmModal">
+      @confirmData="confirmModal"
+    >
       <template #message>
-        <el-form ref="ruleFormRef"
-          style="max-width: 600px"
+        <el-form
+          ref="ruleFormRef"
+          style="max-width: 600px;"
           :model="ruleForm"
           :rules="rules"
           label-width="auto"
           :size="formSize"
-          status-icon>
-          <el-form-item label="项目名字："
-            prop="projectName">
-            <el-input v-model="ruleForm.projectName"
-              placeholder="请输入项目名字" />
+          status-icon
+        >
+          <el-form-item label="项目名字：" prop="projectName">
+            <el-input
+              v-model="ruleForm.projectName"
+              placeholder="请输入项目名字"
+            />
           </el-form-item>
-          <el-form-item label="上传项目数据："
-            prop="file">
-            <input @change="changeFile"
+          <el-form-item label="上传项目数据：" prop="file">
+            <input
+              @change="changeFile"
               type="file"
               id="file"
-              accept=".xls,.xlsx" />
+              accept=".xls,.xlsx"
+            />
           </el-form-item>
         </el-form>
       </template>
     </Create>
   </section>
 </template>
-<script lang='ts' setup>
+<script lang="ts" setup>
 import { reactive, ref, onMounted } from 'vue'
 import type { ComponentSize, FormInstance } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { Action } from 'element-plus'
 import Header from '@/components/Header/index.vue'
-import Create from '@/components/Create/index.vue';
+import Create from '@/components/Create/index.vue'
 import { addProject, getProjectList, deleteProject } from '@/api/modules/index'
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProductStore } from '@/stores/produce'
 interface RuleForm {
-  projectName: string,
+  projectName: string
   file: any
 }
-
 
 const show = ref(false)
 const router = useRouter()
@@ -124,23 +129,23 @@ const formSize = ref<ComponentSize>('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
   projectName: '',
-  file: ''
+  file: '',
 })
 const productStore = useProductStore()
-const projectList = ref<Array<{
-  projectName: '',
-  createTime: '',
-  updateTime: ''
-}>>([]) //项目列表
+const projectList = ref<
+  Array<{
+    projectName: ''
+    createTime: ''
+    updateTime: ''
+  }>
+>([]) //项目列表
 const rules = computed(() => {
   return {
     projectName: [
       { required: true, message: '请输入项目名字', trigger: 'blur' },
-      { min: 1, max: 25, message: '长度在 1 到 25 个字符', trigger: 'blur' }
+      { min: 1, max: 25, message: '长度在 1 到 25 个字符', trigger: 'blur' },
     ],
-    file: [
-      { required: true, message: '请上传项目数据', trigger: 'change' }
-    ],
+    file: [{ required: true, message: '请上传项目数据', trigger: 'change' }],
   }
 })
 
@@ -149,19 +154,20 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (valid: boolean, fields: any) => {
     if (valid) {
       try {
-        let formData = new FormData();
+        let formData = new FormData()
         formData.append('projectName', ruleForm.projectName)
 
         formData.append('file', ruleForm.file)
         const { data } = await addProject(formData)
         if (data?.data) {
+          await getProject()
           closeModal()
           ElMessage({
             showClose: true,
             message: '操作成功',
             type: 'success',
           })
-          router.push({ path: '/list' })
+          // router.push({ path: '/list' })
         } else {
           ElMessage({
             showClose: true,
@@ -169,7 +175,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             type: 'error',
           })
         }
-
       } catch (error) {
         console.log(error)
       }
@@ -178,7 +183,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   })
 }
-
 
 const closeModal = () => {
   show.value = false
@@ -193,9 +197,9 @@ const confirmModal = () => {
 // 删除项目
 const deleteProjectHandler = async (ele: any) => {
   try {
-    ElMessageBox.alert(`确定要删除项目${ele.projectName}吗？`,'删除',  {
+    ElMessageBox.alert(`确定要删除项目${ele.projectName}吗？`, '删除', {
       confirmButtonText: '确 定',
-      callback: async(action: Action) => {
+      callback: async (action: Action) => {
         if (action === 'confirm') {
           const { data } = await deleteProject({ projectId: ele.projectId })
           if (data.code === 200) {
@@ -204,12 +208,11 @@ const deleteProjectHandler = async (ele: any) => {
               message: '操作成功',
               type: 'success',
             })
-            getProject()
+            await getProject()
           }
         }
       },
     })
-
   } catch (error) {
     console.log(error)
   }
@@ -244,8 +247,6 @@ const changeFile = (e: any) => {
   }
 }
 
-
-
 // 创建项目
 const createProject = () => {
   show.value = true
@@ -261,7 +262,7 @@ onMounted(() => {
   getProject()
 })
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .create-project-wrap {
   width: 100vw;
   height: 100vh;
@@ -293,8 +294,7 @@ main {
   flex-direction: column;
   background-color: #fff;
   box-shadow: 5px - 5px 5px rgba(0, 0, 0, 0.3),
-    - 10px - 10px 10px rgba(0, 0, 0, 0.2),
-    - 15px - 15px 15px rgba(0, 0, 0, 0.1);
+    -10px - 10px 10px rgba(0, 0, 0, 0.2), -15px - 15px 15px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #e5e5e5;
   z-index: 99;
 
@@ -305,7 +305,7 @@ main {
     color: #000;
     margin-bottom: 4px;
     cursor: pointer;
-    transition: all .3s linear;
+    transition: all 0.3s linear;
     font-family: sans-serif;
     font-size: 14px;
     font-weight: 400;
@@ -324,11 +324,10 @@ main {
       color: #da1f3f;
     }
   }
-
 }
 
 /* 后面的提示文字颜色 */
-[type=file] {
+[type='file'] {
   color: red;
   /* font-size: 0; */
 }
@@ -337,30 +336,24 @@ main {
 ::file-selector-button {
   height: 33px;
   color: #fff;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   border: 1px solid #2a80eb;
   background-color: #2a80eb;
   cursor: pointer;
 }
 
 .card-wrap {
-  transition: all .3s linear;
+  transition: all 0.3s linear;
 
   .delete-icon {
-    display: none;
-  }
-
-  &:hover {
-    .delete-icon {
-      display: block;
-    }
+    display: block;
   }
 }
 
 ::-ms-browse {
   height: 33px;
   color: #fff;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   border: 1px solid #2a80eb;
   background-color: #2a80eb;
   cursor: pointer;
@@ -368,6 +361,15 @@ main {
 
 .project-list-wrap .card-list {
   cursor: pointer;
+}
 
+.card-container {
+  background: #efefef;
+  color: #000;
+  border-radius: 14px;
+  &:hover {
+    transform: translateY(10px);
+  }
+  transition: all 0.3s linear;
 }
 </style>
