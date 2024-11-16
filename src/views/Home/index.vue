@@ -610,13 +610,17 @@ async function confirmClassData() {
   childrenList.value = childrenList.value.map((res) => {
     if (res.groupId === result.groupId) {
       if (Array.isArray(res.childrenList)) {
-        if (Array.isArray(data.goodsList)) {
-          res.childrenList.push(data)
-        } else {
-          data.goodsList = []
-          res.childrenList.push(data)
-        }
+        res.childrenList.push(data)
       }
+
+      // if (Array.isArray(res.childrenList)) {
+      //   if (Array.isArray(data.goodsList)) {
+      //     res.childrenList.push(data)
+      //   } else {
+      //     data.goodsList = []
+      //     res.childrenList.push(data)
+      //   }
+      // }
     }
     return res
   })
