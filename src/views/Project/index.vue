@@ -364,7 +364,7 @@ main {
 }
 
 .card-container {
-  background: #efefef;
+  background: #fff;
   color: #000;
   border-radius: 14px;
   &:hover {

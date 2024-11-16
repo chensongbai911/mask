@@ -612,15 +612,6 @@ async function confirmClassData() {
       if (Array.isArray(res.childrenList)) {
         res.childrenList.push(data)
       }
-
-      // if (Array.isArray(res.childrenList)) {
-      //   if (Array.isArray(data.goodsList)) {
-      //     res.childrenList.push(data)
-      //   } else {
-      //     data.goodsList = []
-      //     res.childrenList.push(data)
-      //   }
-      // }
     }
     return res
   })
