@@ -2,7 +2,7 @@
   <div class="conatiner">
     <Header />
     <main>
-      <div class="box-wrap" style="position: sticky; left: 0px; z-index: 9999;">
+      <div class="box-wrap" style="position: sticky; left: 0px; z-index: 99;">
         <!-- 父类的池子 -->
         <section class="p-[20px] sticky">
           <!-- 项目的基本信息、 -->
@@ -610,6 +610,9 @@ async function confirmClassData() {
   childrenList.value = childrenList.value.map((res) => {
     if (res.groupId === result.groupId) {
       if (Array.isArray(res.childrenList)) {
+        res.childrenList.push(data)
+      }else{
+        res.childrenList=[]
         res.childrenList.push(data)
       }
     }

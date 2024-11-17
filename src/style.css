@@ -90,3 +90,11 @@ button:focus-visible {
   fill: currentColor;
   display: block;
 }
+
+.el-message-box__title,.el-dialog__header {
+  font-weight: 900;
+}
+
+.el-dialog  {
+  z-index: 99999;
+}

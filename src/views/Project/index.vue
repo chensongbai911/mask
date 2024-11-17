@@ -41,7 +41,7 @@
                 <h3 class="font-bold">项目列表</h3>
               </section>
               <section
-                class="card-list grid grid-flow-row grid-cols-4 gap-4 mt-3 pr-[40px]"
+                class="card-list grid grid-flow-row grid-cols-3 gap-3 mt-3 pr-[40px]"
               >
                 <el-card
                   class="card-container"
@@ -51,18 +51,18 @@
                 >
                   <section class="relative card-wrap">
                     <section
-                      class="absolute top-[0px] right-[0px] w-[16px] cursor-pointer delete-icon"
+                      class="absolute flex  top-[0px] right-[0px] w-[36px] py-[8px] cursor-pointer delete-icon"
                       @click.stop="deleteProjectHandler(ele)"
                     >
                       <svg aria-hidden="true" class="icon">
                         <use xlink:href="#gt-line-delete"></use>
                       </svg>
                     </section>
-                    <p class="text item font-bold text-[18px]">
+                    <p class="text item font-bold text-[18px] mb-2">
                       {{ ele.projectName }}
                     </p>
-                    <p class="text item">创建时间：{{ ele.createTime }}</p>
-                    <p class="text item">更新时间：{{ ele.updateTime }}</p>
+                    <p class="text item text-[14px] text-[#999] py-1">创建时间：{{ ele.createTime }}</p>
+                    <p class="text item text-[14px] text-[#999] py-1">更新时间：{{ ele.updateTime }}</p>
                   </section>
                 </el-card>
               </section>
@@ -277,13 +277,15 @@ main {
   display: flex;
   align-items: center;
   padding: 20px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 0px 12px rgba(0,0,0,0.12);
   max-width: 20%;
   justify-content: space-between;
   cursor: pointer;
 
   span {
+    font-size: 16px;
+    font-weight: 900;
     padding-left: 20px;
   }
 }
@@ -307,8 +309,8 @@ main {
     cursor: pointer;
     transition: all 0.3s linear;
     font-family: sans-serif;
-    font-size: 14px;
-    font-weight: 400;
+    font-size: 16px;
+    font-weight: 900;
     letter-spacing: 0;
     line-height: 22px;
     text-align: center;
@@ -346,7 +348,8 @@ main {
   transition: all 0.3s linear;
 
   .delete-icon {
-    display: block;
+    display: flex;
+    justify-content: center;
   }
 }
 
