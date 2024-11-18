@@ -8,4 +8,9 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container-wrap {
+  height: 100vh;
+  background-color: #efefef;
+}
+</style>

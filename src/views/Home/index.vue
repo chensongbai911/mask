@@ -223,7 +223,7 @@ import {
   getGoodsGroupList,
   getProductList,
   deleteGroup,
-} from '@/api/modules/index'
+} from '@/api/index'
 
 // 大组的数据面板
 const bigPanelData = ref([
