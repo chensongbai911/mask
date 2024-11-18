@@ -2,23 +2,21 @@
   <div class="conatiner">
     <Header />
     <main>
-      <div class="box-wrap" style="position: sticky; left: 0px; z-index: 99;">
+      <div class="box-wrap fixed-wrap"
+        style="position: sticky; left: 0px; z-index: 199;">
         <!-- 父类的池子 -->
         <section class="p-[20px] sticky">
           <!-- 项目的基本信息、 -->
           <section class="">
-            <p
-              class="project-name max-w-[90%] whitespace-nowrap text-ellipsis overflow-hidden ..."
-            >
+            <p class="project-name max-w-[90%] whitespace-nowrap text-ellipsis overflow-hidden ...">
               项目名称：{{ parentProName }}
             </p>
             <p class="time">最后一次修改时间：{{ productDetail.updateTime }}</p>
             <p class="time">创建于{{ productDetail.createTime }}</p>
-            <section
-              class="absolute top-[20px] right-[20px] w-[16px] cursor-pointer"
-              @click="changeProjectName"
-            >
-              <svg aria-hidden="true" class="icon">
+            <section class="absolute top-[20px] right-[20px] w-[16px] cursor-pointer"
+              @click="changeProjectName">
+              <svg aria-hidden="true"
+                class="icon">
                 <use xlink:href="#gt-edit-history" />
               </svg>
             </section>
@@ -26,61 +24,48 @@
 
           <!-- 排序、收藏、统计 -->
           <section class="sort-wrap">
-            <section v-for="item in sortList" class="sort-child">
+            <section v-for="item in sortList"
+              class="sort-child">
               <span>{{ item.name }}</span>
-              <el-image
-                style="width: 15px; height: 15px;"
+              <el-image style="width: 15px; height: 15px;"
                 :src="item.url"
-                fit="cover"
-              />
+                fit="cover" />
             </section>
           </section>
         </section>
         <!-- 父级池子的商品列表 -->
-        <div
-          ref="parentNodeRef"
+        <div ref="parentNodeRef"
           class="darg-wrap"
           :style="{
             gridTemplateColumns: `repeat(3, minmax(50px,1fr))`,
             gridRowGap: `5px`,
             gridColumnGap: `5px`,
-          }"
-        >
-          <div
-            v-for="item in parentList"
+          }">
+          <div v-for="item in parentList"
             :key="item.goodsId"
-            class="child-wrap mover"
-          >
-            <el-image
-              style="width: 100%; height: 100%;"
+            class="child-wrap mover">
+            <el-image style="width: 100%; height: 100%;"
               :src="item.goodsImage"
-              fit="cover"
-            />
+              fit="cover" />
           </div>
         </div>
       </div>
 
       <template v-if="childrenList.length">
         <!-- 子类的池子 -->
-        <div
-          v-for="item in childrenList"
+        <div v-for="item in childrenList"
           :key="item.id"
           class="box-wrap"
           :style="{
-            width: item.show ? '1040px' : '440px',
-          }"
-        >
+            flex: item.show ? '0 0 48%' : ' 0 0 400px',
+          }">
           <!-- 最大组内面板数据 -->
           <section class="sticky py-[20px]">
-            <section
-              class="panel-wrap flex justify-center"
-              v-if="item.statisticalIndicatorInfo"
-            >
-              <section
-                v-for="ele in bigPanelData"
+            <section class="panel-wrap flex justify-center"
+              v-if="item.statisticalIndicatorInfo">
+              <section v-for="ele in bigPanelData"
                 :key="ele.label"
-                class="text-[12px] text-[#000] flex flex-col text-center"
-              >
+                class="text-[12px] text-[#000] flex flex-col text-center">
                 <section>{{ ele.label }}</section>
                 <span class="text-[#FF9900] font-bold">
                   {{
@@ -95,56 +80,44 @@
             <h5>
               组间标题：{{ item.groupName }}
               <!-- 放大分组的区域 -->
-              <section
-                class="absolute top-[20px] right-[60px] w-[16px] cursor-pointer delete-icon"
-                @click="hoverBig(item)"
-              >
-                <svg aria-hidden="true" class="icon">
-                  <use
-                    :xlink:href="
-                      item.show ? '#gt-plane-left' : '#gt-plane-right'
-                    "
-                  ></use>
+              <section class="absolute top-[20px] right-[60px] w-[16px] cursor-pointer delete-icon"
+                @click="hoverBig(item)">
+                <svg aria-hidden="true"
+                  class="icon">
+                  <use :xlink:href="item.show ? '#gt-plane-left' : '#gt-plane-right'
+                    "></use>
                 </svg>
               </section>
               <!-- 删除分组 -->
-              <section
-                class="absolute top-[20px] right-[20px] w-[16px] cursor-pointer delete-icon"
-                @click.stop="deleteGroupHandler(item)"
-              >
-                <svg aria-hidden="true" class="icon">
+              <section class="absolute top-[20px] right-[20px] w-[16px] cursor-pointer delete-icon"
+                @click.stop="deleteGroupHandler(item)">
+                <svg aria-hidden="true"
+                  class="icon">
                   <use xlink:href="#gt-plane-delete1"></use>
                 </svg>
               </section>
             </h5>
           </section>
 
-          <Child
-            :style="{
-              'grid-template-columns': item.show
-                ? 'repeat(8, minmax(50px, 1fr))'
-                : 'repeat(3, minmax(50px, 1fr))',
-            }"
+          <Child :style="{
+            'grid-template-columns': item.show
+              ? 'repeat(6, minmax(50px, 1fr))'
+              : 'repeat(3, minmax(50px, 1fr))',
+          }"
             :key="item.groupId"
             v-model="item.goodsList"
             :groupId="item.groupId"
-            @update="updateList"
-          />
-          <div
-            v-if="Array.isArray(item.childrenList) && item.childrenList.length"
-            class="children-list-wrap"
-          >
-            <div
-              v-for="item in item.childrenList"
+            @update="updateList" />
+          <div v-if="Array.isArray(item.childrenList) && item.childrenList.length"
+            class="children-list-wrap">
+            <div v-for="item in item.childrenList"
               :key="item.groupId"
-              class="box-wrap w-90"
-            >
+              class="box-wrap w-90">
               <h5>组类标题：{{ item.groupName }}</h5>
-              <div class="panel-wrap" v-if="item.statisticalIndicatorInfo">
-                <div
-                  class="text-[#000] flex flex-col text-center"
-                  v-for="ele in Object.keys(item.statisticalIndicatorInfo)"
-                >
+              <div class="panel-wrap"
+                v-if="item.statisticalIndicatorInfo">
+                <div class="text-[#000] flex flex-col text-center"
+                  v-for="ele in Object.keys(item.statisticalIndicatorInfo)">
                   <div>{{ ele }}</div>
                   <div class="text-[#FF9900] font-bold">
                     {{
@@ -153,83 +126,76 @@
                   </div>
                 </div>
               </div>
-              <Child
-                :style="{
-                  'grid-template-columns': item.show
-                    ? 'repeat(8, minmax(50px, 1fr))'
-                    : 'repeat(3, minmax(50px, 1fr))',
-                }"
+              <Child :style="{
+                'grid-template-columns': item.show
+                  ? 'repeat(6, minmax(50px, 1fr))'
+                  : 'repeat(3, minmax(50px, 1fr))',
+              }"
                 :key="item.groupId"
                 :groupId="item.groupId"
                 v-model="item.goodsList"
-                @update="updateList"
-              />
+                @update="updateList" />
             </div>
           </div>
           <!-- 创建组间的分类 -->
-          <section
-            class="my-[20px] create-btn-wrap w-[90%] bg-[#e1e1e1] m-auto"
-            @click="createClassHandler(item)"
-          >
-            <el-image
-              style="width: 22px; height: 22px;"
+          <section class="my-[20px] create-btn-wrap w-[90%] bg-[#e1e1e1] m-auto"
+            @click="createClassHandler(item)">
+            <el-image style="width: 22px; height: 22px;"
               :src="add"
-              fit="cover"
-            />
+              fit="cover" />
             <span class="px-[10px] cursor-pointer">创建组内</span>
           </section>
         </div>
       </template>
       <!-- 创建组间的分类 -->
-      <section class="my-[20px] create-btn-wrap" @click="addChildClass">
-        <el-image style="width: 22px; height: 22px;" :src="add" fit="cover" />
+      <section class="my-[20px] create-btn-wrap"
+        @click="addChildClass">
+        <el-image style="width: 22px; height: 22px;"
+          :src="add"
+          fit="cover" />
         <span class="px-[10px] cursor-pointer">创建组间</span>
       </section>
     </main>
 
     <!-- 更改项目名字 -->
-    <Create
-      v-model:show="editShow"
+    <Create v-model:show="editShow"
       title="更改项目名称"
       @close-dialog="closeEditModal"
-      @confirm-data="confirmNameData"
-    >
+      @confirm-data="confirmNameData">
       <template #message>
-        <el-input v-model="editParentProName" placeholder="请输入项目名称" />
+        <el-input v-model="editParentProName"
+          placeholder="请输入项目名称" />
       </template>
     </Create>
 
     <!-- 更改分组项目的名字 -->
-    <Create
-      v-model:show="editChildShow"
+    <Create v-model:show="editChildShow"
       title="编辑名称"
       @close-dialog="closeEditModal"
-      @confirm-data="confirmChildNameData"
-    >
+      @confirm-data="confirmChildNameData">
       <template #message>
-        <el-input v-model="editParentProName" placeholder="请输入名称" />
+        <el-input v-model="editParentProName"
+          placeholder="请输入名称" />
       </template>
     </Create>
 
-    <Create
-      v-model:show="createShow"
+    <Create v-model:show="createShow"
       title="添加组间标题"
       @close-dialog="closeDialogShow"
-      @confirm-data="confirmData"
-    >
+      @confirm-data="confirmData">
       <template #message>
-        <el-input v-model="classTitle" placeholder="请输入组间标题" />
+        <el-input v-model="classTitle"
+          placeholder="请输入组间标题" />
       </template>
     </Create>
 
-    <Create
-      v-model:show="createClassShow"
+    <Create v-model:show="createClassShow"
       title="组内标题"
       @close-dialog="closeClassDialogShow"
-      @confirm-data="confirmClassData"
-    >
+      @confirm-data="confirmClassData">
       <template #message>
-        <el-input v-model="classTitle" placeholder="请输入组内标题" />
+        <el-input v-model="classTitle"
+          placeholder="请输入组内标题" />
       </template>
     </Create>
   </div>
@@ -611,8 +577,8 @@ async function confirmClassData() {
     if (res.groupId === result.groupId) {
       if (Array.isArray(res.childrenList)) {
         res.childrenList.push(data)
-      }else{
-        res.childrenList=[]
+      } else {
+        res.childrenList = []
         res.childrenList.push(data)
       }
     }
@@ -683,6 +649,7 @@ main {
     background: #ffffff;
     position: relative;
     transition: all 0.3s linear;
+
     h5 {
       font-size: 16px;
       font-weight: 900;
@@ -781,5 +748,10 @@ main {
   top: 0;
   background: #fff;
   z-index: 99;
+}
+
+.fixed-wrap.box-wrap {
+  flex: 0 0 440px;
+  box-shadow: 0 10px 24px 0 rgba(37, 43, 58, .24);
 }
 </style>
