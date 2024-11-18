@@ -69,6 +69,6 @@ watchEffect(() => {
 <style scoped lang="scss">
 .children-wrap {
   display: grid;
-  min-height: 150px;
+  min-height: 80px;
 }
 </style>
