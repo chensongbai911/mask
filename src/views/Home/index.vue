@@ -284,10 +284,9 @@ const editParentProName = ref('')
 const editChildInfo = ref<Record<string, any>>({})
 
 // 变大
-const hoverBig = (item) => {
-  console.log('item', item)
+const hoverBig = (item:any) => {
   item.show = !item.show
-  item.childrenList = item.childrenList.map((res) => {
+  item.childrenList = item.childrenList.map((res:any) => {
     res.show = !res.show
     return res
   })
@@ -377,6 +376,7 @@ const deleteGroupHandler = async (ele: any) => {
     ElMessageBox.alert(`确定要删除分组${ele.groupName}吗？`, '删除', {
       confirmButtonText: '确 定',
       cancelButtonText: '取 消',
+      confirmButtonClass:'confirm-btn',
       callback: async (action: any) => {
         if (action === 'confirm') {
           const { data } = await deleteGroup({ groupId: ele.groupId })

@@ -199,6 +199,7 @@ const deleteProjectHandler = async (ele: any) => {
   try {
     ElMessageBox.alert(`确定要删除项目${ele.projectName}吗？`, '删除', {
       confirmButtonText: '确 定',
+      confirmButtonClass:'confirm-btn',
       callback: async (action: Action) => {
         if (action === 'confirm') {
           const { data } = await deleteProject({ projectId: ele.projectId })
@@ -371,7 +372,7 @@ main {
   color: #000;
   border-radius: 14px;
   &:hover {
-    transform: translateY(10px);
+    transform: translateY(-5px);
   }
   transition: all 0.3s linear;
 }

@@ -49,35 +49,5 @@ const confirmData = () => {
   justify-content: flex-end;
 }
 
-.confirm-btn {
-  padding: 4px 26px;
-  background: #000000;
-  color: #fff;
-  border-radius: 4px;
-  margin-left: 20px;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  &:hover {
-    background-color: #232323;
-  }
-}
 
-.cancel-btn {
-  padding: 4px 26px;
-  background: #fff;
-  color: #000;
-  border-radius: 4px;
-  border: 1px solid #e7e7e7;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: all .3s linear;
-  &:hover {
-    color: #526ecc;
-    border-color: #526ecc;
-  }
-}
 </style>
