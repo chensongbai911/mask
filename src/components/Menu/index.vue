@@ -10,7 +10,7 @@
         :src="item.url"
         fit="cover"
       ></el-image>
-      <span :style="{ color: route.name === item.path ? 'red' : '#fff' }">
+      <span :style="{ color: route.name === item.path ? '#DA203E' : '#fff' }">
         {{ item.name }}
       </span>
     </section>
@@ -57,9 +57,9 @@ function goPage(name: string) {
       color: #ffffff;
       padding-left: 10px;
       transition: all 0.3s linear;
-
+      font-weight: 900;
       &:hover {
-        color: red;
+        color: #DA203E !important;
       }
     }
   }
